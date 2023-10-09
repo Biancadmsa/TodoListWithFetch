@@ -9,4 +9,70 @@
     
     import 'relative/path/to/stylesheet.scss';
 
-*/
+/* */
+body{
+
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-style: italic;
+  background-color: rgba(145, 132, 0, 0.6); 
+  font-size: 50px;
+}
+
+
+
+.container{
+  margin-top: 10px;
+  width: 80%;
+  height: 50%;
+}
+
+h1{
+  text-align: center;
+  color:white;
+  text-shadow: 2px 2px 4px #000000;
+  font-size: 80px;
+  margin-bottom:40px;
+}
+
+ul{
+  padding: 0;
+  margin-bottom: 0; 
+  
+}
+
+ul li{
+  border: 1px solid rgb(248, 248, 252);
+  list-style: none;
+  padding: 5px;
+  border-width: 2px;
+}
+
+li{
+min-height:70px;
+}
+
+input{
+  padding: 1px;
+  width: 100%;
+  color: black;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  font-style: italic;
+  text-shadow: 2px 2px 4px #fa0707;
+  background: #f5b221;
+  
+  
+}
+
+:placeholder-shown{
+  text-align: center;
+}
+
+
+.fa-solid{
+background: none;
+  float:right;
+}
+
+li:last-child i {
+  display: block;
+}
