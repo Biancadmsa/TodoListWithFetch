@@ -11,27 +11,71 @@ const Home = () => {
   function handleTaskList(event) {
     if (event.key === "Enter") {
       if (inputValue.trim() !== "") {
-        setTodos([...todos, inputValue.trim()]);
+        setTodos([...todos, {label:inputValue, done:false}]);
         setInputValue("");
       }
     }
+  // }
+
+  // function lista (index) {
+  //   let filterTask = todos.filter((item, indexFilter) => index !== indexFilter);
+  //   setTodos(filterTask);
   }
 
-  function lista (index) {
-    let filterTask = todos.filter((item, indexFilter) => index !== indexFilter);
-    setTodos(filterTask);
+  function getList(){
+    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa')//METHOD GET
+      .then(resp => {
+        return resp.json();
+      })
+      .then(data => {
+        console.log("Todo list:", data);
+        setTodos(data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
+
+  useEffect(() =>{
+    getList();
+  },[]);
+
+  function deleteList(){
+  fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa')//METHOD GET
+    .then(resp => {
+      return resp.json();
+    })
+    .then(data => {
+      console.log("Todo list:", data);
+      setTodos(data);
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+
+  deleteList();
+[];
+
+  
 
   useEffect(() => {
     // Update your todo list with an API call whenever todos change
-    fetch('https://playground.4geeks.com/apis/fake/todos/user/biancadmsa', {
+    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa', {
       method: "PUT",
-      body: JSON.stringify(todos),
+      body: JSON.stringify(todos.map((todos)=>({label:todos.label,done:false}))),
       headers: {
         "Content-Type": "application/json"
       }
     })
-      .then(resp => resp.json())
+      .then(resp => {
+        console.log (resp.ok);
+        console.log (resp.status);
+        console.log (resp.text());
+        return resp.json();
+      })
+
       .then(data => {
         console.log("Todo list updated:", data);
       })
@@ -56,7 +100,7 @@ const Home = () => {
         </li>
         {todos.map((item, index) => (
           <li key={index}>
-            {item}
+            {item.label}
             <span>
               <i
                 className="fa-solid fa-xmark"
