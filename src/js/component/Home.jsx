@@ -11,22 +11,15 @@ const Home = () => {
   function handleTaskList(event) {
     if (event.key === "Enter") {
       if (inputValue.trim() !== "") {
-        setTodos([...todos, {label:inputValue, done:false}]);
+        setTodos([...todos, { label: inputValue, done: false }]);
         setInputValue("");
       }
     }
-  // }
-
-  // function lista (index) {
-  //   let filterTask = todos.filter((item, indexFilter) => index !== indexFilter);
-  //   setTodos(filterTask);
   }
 
-  function getList(){
-    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa')//METHOD GET
-      .then(resp => {
-        return resp.json();
-      })
+  function getList() {
+    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa')
+      .then(resp => resp.json())
       .then(data => {
         console.log("Todo list:", data);
         setTodos(data);
@@ -35,54 +28,49 @@ const Home = () => {
         console.error('Error:', error);
       });
   }
-
-  useEffect(() =>{
+useEffect(() => {
     getList();
-  },[]);
+  }, []);
 
-  function deleteList(){
-  fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa')//METHOD GET
-    .then(resp => {
-      return resp.json();
+  function buttonClear() {
+   
+    setTodos([]);
+  
+    // Envía una solicitud PUT para actualizar todos
+    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa', {
+      method: 'PUT',
+      body: JSON.stringify([]), 
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
-    .then(data => {
-      console.log("Todo list:", data);
-      setTodos(data);
-    })
-    .catch(error => {
-      console.error('Error:', error);
-    });
-}
-
-
-  deleteList();
-[];
+      .then(resp => resp.json())
+      .then(data => {
+        console.log('Todo list cleared:', data);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  }
 
   
 
   useEffect(() => {
-    // Update your todo list with an API call whenever todos change
     fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa', {
       method: "PUT",
-      body: JSON.stringify(todos.map((todos)=>({label:todos.label,done:false}))),
+      body: JSON.stringify(todos.map((todo) => ({ label: todo.label, done: false }))),
       headers: {
         "Content-Type": "application/json"
       }
     })
-      .then(resp => {
-        console.log (resp.ok);
-        console.log (resp.status);
-        console.log (resp.text());
-        return resp.json();
-      })
-
+      .then(resp => resp.json())
       .then(data => {
         console.log("Todo list updated:", data);
       })
       .catch(error => {
         console.error('Error:', error);
       });
-  }, [todos]); // Run this effect whenever todos change
+  }, [todos]);
 
   return (
     <div className="container">
@@ -111,6 +99,7 @@ const Home = () => {
         ))}
       </ul>
       <div>{todos.length} Item</div>
+      <button class="deleteButton" onClick={buttonClear}>Clear</button>
     </div>
   );
 };

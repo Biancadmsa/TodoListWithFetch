@@ -16,6 +16,7 @@ body{
   font-style: italic;
   background-color: rgba(145, 132, 0, 0.6); 
   font-size: 50px;
+
 }
 
 
@@ -75,4 +76,11 @@ background: none;
 
 li:last-child i {
   display: block;
+}
+.deleteButton {
+  display: flex; /* Utilizar flexbox para centrar el contenido */
+  align-items: center; /* Centrar verticalmente */
+  justify-content: center; /* Centrar horizontalmente */
+  background:black;
+  color:white;
 }
