@@ -17,28 +17,31 @@ const Home = () => {
     }
   }
 
-  function getList() {
-    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa')
-      .then(resp => resp.json())
-      .then(data => {
-        console.log("Todo list:", data);
-        setTodos(data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }
-useEffect(() => {
+
+
+  const getList = async () => {
+    try {
+      const response = await fetch(
+        "https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa"
+      );
+      const data = await response.json();
+      console.log("Todo list:", data);
+      setTodos(data);
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  useEffect(() => {
     getList();
   }, []);
-
+  
+  
   function buttonClear() {
-   
     setTodos([]);
   
     // Envía una solicitud PUT para actualizar todos
     fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa', {
-      method: 'PUT',
+      method: 'POST',
       body: JSON.stringify([]), 
       headers: {
         'Content-Type': 'application/json'
