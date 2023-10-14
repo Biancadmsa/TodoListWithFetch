@@ -8,72 +8,84 @@ const Home = () => {
     setInputValue(event.target.value);
   }
 
-  function handleTaskList(event) {
+  async function handleTaskList(event) {
     if (event.key === "Enter") {
       if (inputValue.trim() !== "") {
-        setTodos([...todos, { label: inputValue, done: false }]);
+        const newTask = { label: inputValue, done: false };
+        const updatedTodos = [...todos, newTask];
+        setTodos(updatedTodos);
         setInputValue("");
+
+        try {
+          // Enviar la nueva tarea a la API usando POST
+          await updateTodoList(updatedTodos);
+        } catch (error) {
+          console.error('Error:', error);
+        }
       }
     }
   }
 
+  async function handleDeleteTask(index) {
+    const updatedTodos = todos.filter((_, i) => i !== index);
+    setTodos(updatedTodos);
 
+    try {
+      // Enviar la lista actualizada a la API usando PUT
+      await updateTodoList(updatedTodos);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
-  const getList = async () => {
+  async function updateTodoList(updatedTodos) {
     try {
       const response = await fetch(
-        "https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa"
+        "https://playground.4geeks.com/apis/fake/todos/user/biancadmsa",
+        {
+          method: 'PUT',
+          body: JSON.stringify(updatedTodos),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
       );
-      const data = await response.json();
-      console.log("Todo list:", data);
-      setTodos(data);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  useEffect(() => {
-    getList();
-  }, []);
-  
-  
-  function buttonClear() {
-    setTodos([]);
-  
-    // Envía una solicitud PUT para actualizar todos
-    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa', {
-      method: 'POST',
-      body: JSON.stringify([]), 
-      headers: {
-        'Content-Type': 'application/json'
+
+      if (!response.ok) {
+        throw new Error('Error al actualizar la lista en la API');
       }
-    })
-      .then(resp => resp.json())
-      .then(data => {
-        console.log('Todo list cleared:', data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
 
-  
+  async function buttonClear() {
+    setTodos([]);
+
+    try {
+      // Enviar la lista vacía a la API usando POST
+      await updateTodoList([]);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
 
   useEffect(() => {
-    fetch('https://playground.4geeks.com/apis/fake/todos/user/Biancadmsa', {
-      method: "PUT",
-      body: JSON.stringify(todos.map((todo) => ({ label: todo.label, done: false }))),
-      headers: {
-        "Content-Type": "application/json"
+    async function fetchTodoList() {
+      try {
+        const response = await fetch(
+          "https://playground.4geeks.com/apis/fake/todos/user/biancadmsa"
+        );
+        const data = await response.json();
+        console.log("Todo list:", data);
+        setTodos(data);
+      } catch (error) {
+        console.error("Error:", error);
       }
-    })
-      .then(resp => resp.json())
-      .then(data => {
-        console.log("Todo list updated:", data);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-      });
-  }, [todos]);
+    }
+
+    fetchTodoList();
+  }, []);
 
   return (
     <div className="container">
@@ -95,14 +107,14 @@ const Home = () => {
             <span>
               <i
                 className="fa-solid fa-xmark"
-                onClick={() => lista(index)}
+                onClick={() => handleDeleteTask(index)} // Llama a la función para eliminar la tarea
               ></i>
             </span>
           </li>
         ))}
       </ul>
       <div>{todos.length} Item</div>
-      <button class="deleteButton" onClick={buttonClear}>Clear</button>
+      <button className="deleteButton" onClick={buttonClear}>Clear</button>
     </div>
   );
 };
